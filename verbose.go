@@ -41,25 +41,25 @@ type VerboseImpl struct {
 	printLevelPrefix bool
 }
 
-// VerboseOption is an option for verbose.
-type VerboseOption func(*VerboseImpl)
+// Option is an option for verbose.
+type Option func(*VerboseImpl)
 
 // WithWriter sets the writer.
-func WithWriter(w io.Writer) VerboseOption {
+func WithWriter(w io.Writer) Option {
 	return func(v *VerboseImpl) {
 		v.writer = w
 	}
 }
 
 // WithLevelPrefix is a VerboseOption that prints the verbose level prefix.
-func WithLevelPrefix() VerboseOption {
+func WithLevelPrefix() Option {
 	return func(v *VerboseImpl) {
 		v.printLevelPrefix = true
 	}
 }
 
 // New creates a new verbose implementation.
-func New(verboseLevel int, opts ...VerboseOption) Verbose {
+func New(verboseLevel int, opts ...Option) Verbose {
 	// Limit the verbose level to the valid range.
 	if verboseLevel < LevelNone {
 		verboseLevel = LevelNone
