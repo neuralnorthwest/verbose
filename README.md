@@ -26,6 +26,14 @@ v.Debug("This is a debug message")
 v.Trace("This is a trace message")
 ```
 
+Formatting is supported:
+
+```go
+v.Verbosef("This is a %s message", "verbose")
+v.Debugf("This is a %s message", "debug")
+v.Tracef("This is a %s message", "trace")
+```
+
 ## Verbose Levels
 
 | Level | Constant       | Description    |
