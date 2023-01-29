@@ -30,8 +30,8 @@ type Verbose interface {
 	Trace(args ...interface{})
 }
 
-// verbose is the verbose implementation.
-type verbose struct {
+// VerboseImpl is the VerboseImpl implementation.
+type VerboseImpl struct {
 	// verboseLevel is the verbose level.
 	verboseLevel int
 	// writer is the writer.
@@ -42,18 +42,18 @@ type verbose struct {
 }
 
 // VerboseOption is an option for verbose.
-type VerboseOption func(*verbose)
+type VerboseOption func(*VerboseImpl)
 
 // WithWriter sets the writer.
 func WithWriter(w io.Writer) VerboseOption {
-	return func(v *verbose) {
+	return func(v *VerboseImpl) {
 		v.writer = w
 	}
 }
 
-// PrintLevelPrefix is a VerboseOption that prints the verbose level prefix.
-func PrintLevelPrefix() VerboseOption {
-	return func(v *verbose) {
+// WithLevelPrefix is a VerboseOption that prints the verbose level prefix.
+func WithLevelPrefix() VerboseOption {
+	return func(v *VerboseImpl) {
 		v.printLevelPrefix = true
 	}
 }
@@ -66,7 +66,7 @@ func New(verboseLevel int, opts ...VerboseOption) Verbose {
 	} else if verboseLevel > LevelTrace {
 		verboseLevel = LevelTrace
 	}
-	v := &verbose{
+	v := &VerboseImpl{
 		verboseLevel: verboseLevel,
 		writer:       os.Stdout,
 	}
@@ -78,7 +78,7 @@ func New(verboseLevel int, opts ...VerboseOption) Verbose {
 
 // Verbosef prints a verbose message. Verbose messages are only printed if the
 // verbose level is set to LevelVerbose or higher.
-func (v *verbose) Verbosef(format string, args ...interface{}) {
+func (v *VerboseImpl) Verbosef(format string, args ...interface{}) {
 	if v.verboseLevel >= LevelVerbose {
 		if v.printLevelPrefix {
 			format = "[VERBOSE] " + format
@@ -89,7 +89,7 @@ func (v *verbose) Verbosef(format string, args ...interface{}) {
 
 // Verbose prints a verbose message. Verbose messages are only printed if the
 // verbose level is set to LevelVerbose or higher.
-func (v *verbose) Verbose(args ...interface{}) {
+func (v *VerboseImpl) Verbose(args ...interface{}) {
 	if v.verboseLevel >= LevelVerbose {
 		if v.printLevelPrefix {
 			args = append([]interface{}{"[VERBOSE]"}, args...)
@@ -100,7 +100,7 @@ func (v *verbose) Verbose(args ...interface{}) {
 
 // Debugf prints a debug message. Debug messages are only printed if the
 // verbose level is set to LevelDebug or higher.
-func (v *verbose) Debugf(format string, args ...interface{}) {
+func (v *VerboseImpl) Debugf(format string, args ...interface{}) {
 	if v.verboseLevel >= LevelDebug {
 		if v.printLevelPrefix {
 			format = "[DEBUG] " + format
@@ -111,7 +111,7 @@ func (v *verbose) Debugf(format string, args ...interface{}) {
 
 // Debug prints a debug message. Debug messages are only printed if the
 // verbose level is set to LevelDebug or higher.
-func (v *verbose) Debug(args ...interface{}) {
+func (v *VerboseImpl) Debug(args ...interface{}) {
 	if v.verboseLevel >= LevelDebug {
 		if v.printLevelPrefix {
 			args = append([]interface{}{"[DEBUG]"}, args...)
@@ -122,7 +122,7 @@ func (v *verbose) Debug(args ...interface{}) {
 
 // Tracef prints a trace message. Trace messages are only printed if the
 // verbose level is set to LevelTrace.
-func (v *verbose) Tracef(format string, args ...interface{}) {
+func (v *VerboseImpl) Tracef(format string, args ...interface{}) {
 	if v.verboseLevel >= LevelTrace {
 		if v.printLevelPrefix {
 			format = "[TRACE] " + format
@@ -133,7 +133,7 @@ func (v *verbose) Tracef(format string, args ...interface{}) {
 
 // Trace prints a trace message. Trace messages are only printed if the
 // verbose level is set to LevelTrace.
-func (v *verbose) Trace(args ...interface{}) {
+func (v *VerboseImpl) Trace(args ...interface{}) {
 	if v.verboseLevel >= LevelTrace {
 		if v.printLevelPrefix {
 			args = append([]interface{}{"[TRACE]"}, args...)

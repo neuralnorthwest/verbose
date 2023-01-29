@@ -139,7 +139,7 @@ func Test_Verbose(t *testing.T) {
 			Name: "verbose with prefix",
 			Options: []VerboseOption{
 				WithWriter(&bytes.Buffer{}),
-				PrintLevelPrefix(),
+				WithLevelPrefix(),
 			},
 			VerboseLevel: LevelVerbose,
 			Calls: []func(Verbose){
@@ -168,7 +168,7 @@ func Test_Verbose(t *testing.T) {
 			Name: "debug with prefix",
 			Options: []VerboseOption{
 				WithWriter(&bytes.Buffer{}),
-				PrintLevelPrefix(),
+				WithLevelPrefix(),
 			},
 			VerboseLevel: LevelDebug,
 			Calls: []func(Verbose){
@@ -197,7 +197,7 @@ func Test_Verbose(t *testing.T) {
 			Name: "trace with prefix",
 			Options: []VerboseOption{
 				WithWriter(&bytes.Buffer{}),
-				PrintLevelPrefix(),
+				WithLevelPrefix(),
 			},
 			VerboseLevel: LevelTrace,
 			Calls: []func(Verbose){
@@ -229,7 +229,7 @@ func Test_Verbose(t *testing.T) {
 			for _, call := range c.Calls {
 				call(v)
 			}
-			actual := v.(*verbose).writer.(*bytes.Buffer).String()
+			actual := v.(*VerboseImpl).writer.(*bytes.Buffer).String()
 			if actual != c.Expected {
 				t.Errorf("expected %q, got %q", c.Expected, actual)
 			}
@@ -239,7 +239,7 @@ func Test_Verbose(t *testing.T) {
 
 // Test_Verbose_DefaultWriter tests that the default writer is os.Stdout.
 func Test_Verbose_DefaultWriter(t *testing.T) {
-	v, ok := New(LevelVerbose).(*verbose)
+	v, ok := New(LevelVerbose).(*VerboseImpl)
 	if !ok {
 		t.Fatal("expected verbose to be of type *verbose")
 	}
@@ -251,18 +251,32 @@ func Test_Verbose_DefaultWriter(t *testing.T) {
 // Test_VerboseLevel_Bounds tests that the verbose level is bounded to the
 // minimum and maximum values.
 func Test_VerboseLevel_Bounds(t *testing.T) {
-	vMin, ok := New(-1).(*verbose)
+	vMin, ok := New(-1).(*VerboseImpl)
 	if !ok {
 		t.Fatal("expected verbose to be of type *verbose")
 	}
 	if vMin.verboseLevel != LevelNone {
 		t.Errorf("expected verbose level to be %d, got %d", LevelNone, vMin.verboseLevel)
 	}
-	vMax, ok := New(4).(*verbose)
+	vMax, ok := New(4).(*VerboseImpl)
 	if !ok {
 		t.Fatal("expected verbose to be of type *verbose")
 	}
 	if vMax.verboseLevel != LevelTrace {
 		t.Errorf("expected verbose level to be %d, got %d", LevelTrace, vMax.verboseLevel)
+	}
+}
+
+// Test_Verbose_Embed tests that embedding VerboseImpl works.
+func Test_Verbose_Embed(t *testing.T) {
+	type embed struct {
+		Verbose
+	}
+	v := embed{
+		Verbose: New(LevelVerbose, WithWriter(&bytes.Buffer{})),
+	}
+	v.Verbosef("test")
+	if v.Verbose.(*VerboseImpl).writer.(*bytes.Buffer).String() != "test" {
+		t.Error("expected embedded verbose to work")
 	}
 }
