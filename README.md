@@ -38,7 +38,7 @@ v.Tracef("This is a %s message", "trace")
 | Level | Constant       | Description                                                                        |
 |-------|----------------|------------------------------------------------------------------------------------|
 | 0     | `LevelNone`    | No output. At this level, all messages are ignored.                                |
-| 1     | `LevelVerbose` | Verbose output. At this level, onlyV `Verbose` messages are printed.                |
+| 1     | `LevelVerbose` | Verbose output. At this level, only `Verbose` messages are printed.                |
 | 2     | `LevelDebug`   | Debug output. At this level, `Verbose` and `Debug` messages are printed.           |
 | 3     | `LevelTrace`   | Trace output. At this level, `Verbose`, `Debug`, and `Trace` messages are printed. |
 
