@@ -11,7 +11,7 @@ type Test_Verbose_Case struct {
 	// Name is the test name.
 	Name string
 	// Options are the verbose options.
-	Options []VerboseOption
+	Options []Option
 	// VerboseLevel is the verbose level.
 	VerboseLevel int
 	// Calls are the calls to make.
@@ -25,7 +25,7 @@ func Test_Verbose(t *testing.T) {
 	cases := []Test_Verbose_Case{
 		{
 			Name: "none",
-			Options: []VerboseOption{
+			Options: []Option{
 				WithWriter(&bytes.Buffer{}),
 			},
 			VerboseLevel: LevelNone,
@@ -53,7 +53,7 @@ func Test_Verbose(t *testing.T) {
 		},
 		{
 			Name: "verbose",
-			Options: []VerboseOption{
+			Options: []Option{
 				WithWriter(&bytes.Buffer{}),
 			},
 			VerboseLevel: LevelVerbose,
@@ -81,7 +81,7 @@ func Test_Verbose(t *testing.T) {
 		},
 		{
 			Name: "debug",
-			Options: []VerboseOption{
+			Options: []Option{
 				WithWriter(&bytes.Buffer{}),
 			},
 			VerboseLevel: LevelDebug,
@@ -109,7 +109,7 @@ func Test_Verbose(t *testing.T) {
 		},
 		{
 			Name: "trace",
-			Options: []VerboseOption{
+			Options: []Option{
 				WithWriter(&bytes.Buffer{}),
 			},
 			VerboseLevel: LevelTrace,
@@ -137,7 +137,7 @@ func Test_Verbose(t *testing.T) {
 		},
 		{
 			Name: "verbose with prefix",
-			Options: []VerboseOption{
+			Options: []Option{
 				WithWriter(&bytes.Buffer{}),
 				WithLevelPrefix(),
 			},
@@ -166,7 +166,7 @@ func Test_Verbose(t *testing.T) {
 		},
 		{
 			Name: "debug with prefix",
-			Options: []VerboseOption{
+			Options: []Option{
 				WithWriter(&bytes.Buffer{}),
 				WithLevelPrefix(),
 			},
@@ -195,7 +195,7 @@ func Test_Verbose(t *testing.T) {
 		},
 		{
 			Name: "trace with prefix",
-			Options: []VerboseOption{
+			Options: []Option{
 				WithWriter(&bytes.Buffer{}),
 				WithLevelPrefix(),
 			},
