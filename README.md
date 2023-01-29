@@ -105,15 +105,21 @@ on your type.
 For example:
 
 ```go
-type MyType struct {
-    // Embed the Verbose type into your own type.
+// Create an interface that embeds Verbose, but isn't called Verbose. This is
+// necessary to avoid a name collision with the Verbose type.
+type MyVerbose interface {
     verbose.Verbose
+}
+
+type MyType struct {
+    // Embed the MyVerbose type into your own type.
+    MyVerbose
 }
 
 func NewMyType(verboseLevel int, opts ...verbose.Option) *MyType {
     return &MyType{
         // Initialize the embedded Verbose type.
-        Verbose: verbose.New(verboseLevel, opts...),
+        MyVerbose: verbose.New(verboseLevel, opts...),
     }
 }
 
