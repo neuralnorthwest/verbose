@@ -40,8 +40,8 @@ jobs:
         id: detect-version
       - name: Verify Version
         run: |
-          # Make sure there's not a version tag already
-          if git tag -l "${{ steps.detect-version.outputs.version }}"; then
-            echo "Version tag already exists"
+          # No tag should exist with this version
+          if git tag -l | grep -q ${{ steps.detect-version.outputs.version }}; then
+            echo "ERROR: Version ${{ steps.detect-version.outputs.version }} already exists"
             exit 1
           fi
