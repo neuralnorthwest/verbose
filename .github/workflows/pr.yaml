@@ -27,3 +27,21 @@ jobs:
       - uses: neuralnorthwest/actions/lint-go@main
         with:
           no-cache: true
+  detect-version:
+    name: Detect Version
+    outputs:
+      version: ${{ steps.detect-version.outputs.version }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: neuralnorthwest/actions/version-go@main
+        id: detect-version
+      - name: Verify Version
+        run: |
+          # Make sure there's not a version tag already
+          if git tag -l "${{ steps.detect-version.outputs.version }}"; then
+            echo "Version tag already exists"
+            exit 1
+          fi
