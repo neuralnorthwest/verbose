@@ -9,6 +9,9 @@ on:
       - '**'
     paths:
       - '**'
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -44,3 +47,15 @@ jobs:
             echo "ERROR: Version ${{ steps.detect-version.outputs.version }} already exists"
             exit 1
           fi
+  release:
+    name: Release
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    needs: [test, lint, detect-version]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: |
+          gh auth login --with-token <<< ${{ secrets.GITHUB_TOKEN }}
+          gh release create "v${{ needs.detect-version.outputs.version }}" -t "verbose@v${{ needs.detect-version.outputs.version }}" -n "${{ needs.detect-version.outputs.version }}"
